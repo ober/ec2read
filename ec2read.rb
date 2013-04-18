@@ -1,5 +1,11 @@
 class Ec2read
 
+
+  def initialize(instance_dump)
+
+  end
+
+
   def self.readin(file)
     File.open(file,"r").read
   end
@@ -21,8 +27,8 @@ class Ec2read
       when "BLOCKDEVICE"
         results[:last_instance] = { :volid => l[2], :date => l[3] }
       when "TAG"
-        results[l[2]][:tags] ||= []
-        results[l[2]][:tags] << { l[3] => l[4] }
+        results[l[2]][:tags] ||= {}
+        results[l[2]][:tags][l[3]] = l[4]
       end
       results
     end
@@ -46,4 +52,20 @@ class Ec2read
     end
     gethash(%{ec2-describe-instances})
   end
+
+
+  def instance(instance_id,hash)
+
+  end
+
+
+
+  def find(field,filter)
+
+
+  end
+
+
+
+
 end
