@@ -10,31 +10,29 @@ class Ec2read
       exit 2
     end
 
-    ec2hash = {}
-    contents.each_line.inject({}) { |results, line|
+    contents.each_line.inject({}) do |results, line|
       l = line.split("\t")
       case l.first
-        # when "RESERVATION"
-        #   "reservation"
+        #when "RESERVATION"
+        #   "reservation"3
       when "INSTANCE"
-        ec2hash[l[1]] = { :ami => l[2], :fqdn => l[3], :intern => l[4], :state => l[5], :size => l[9], :az => l[11], :aki => l[12], :ex_ip => l[16], :in_ip => l[17], :ebs => l[20], :paravirt => l[25], :xen => l[26], :uuid_az => l[27], :sgs => l[28], :default => l[29], :errata_f => l[30] }
-        @last_instance = l[1] # Save for blockdevice.
+        results[l[1]] = { :ami => l[2], :fqdn => l[3], :intern => l[4], :state => l[5], :size => l[9], :az => l[11], :aki => l[12], :ex_ip => l[16], :in_ip => l[17], :ebs => l[20], :paravirt => l[25], :xen => l[26], :uuid_az => l[27], :sgs => l[28], :default => l[29], :errata_f => l[30] }
+        results[:last_instance] = l[1] # Save for blockdevice.
       when "BLOCKDEVICE"
-        ec2hash[@last_instance][l[1]] = { :volid => l[2], :date => l[3] }
+        results[:last_instance] = { :volid => l[2], :date => l[3] }
       when "TAG"
-        ec2hash[l[2]][:tags] ||= []
-        ec2hash[l[2]][:tags] << { l[3] => l[4] }
+        results[l[2]][:tags] ||= []
+        results[l[2]][:tags] << { l[3] => l[4] }
       end
-    }
-
-    ec2hash
+      results
+    end
   end
 
   def self.testh(file)
     require 'pp'
     fd = readin(file)
     myhash = gethash(fd)
-    pp myhash
+    pp myhash.first
   end
 
   def self.doit(file)
