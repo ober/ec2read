@@ -1,16 +1,33 @@
 class Ec2read
 
+  require 'pp'
+  $needed = [
+             :AWS_ACCESS_KEY,
+             :AWS_ACCESS_KEY,
+             :AWS_AUTO_SCALING_HOME,
+             :AWS_CLOUDFORMATION_HOME,
+             :AWS_CREDENTIAL_FILE,
+             :AWS_ELB_HOME,
+             :AWS_IAM_HOME,
+             :AWS_SECRET_KEY,
+             :EC2_CERT,
+             :EC2_HOME,
+             :EC2_PRIVATE_KEY,
+             :JAVA_HOME
+            ]
 
-  def initialize(instance_dump)
 
+  def initialize(file = nil)
+    ec2in = readin(file) if file
+    ec2in ||= ec2din
+    @ec2in = gethash(ec2in)
   end
 
-
-  def self.readin(file)
+  def readin(file)
     File.open(file,"r").read
   end
 
-  def self.gethash(contents)
+  def gethash(contents)
     if contents.nil?
       puts "Error: Nil passed to #{__method__}"
       exit 2
@@ -41,11 +58,8 @@ class Ec2read
     pp myhash.first
   end
 
-  def self.doit(file)
-    gethash(readin(file))
-  end
-
-  def self.ec2in
+  def ec2din
+    require 'verifyenv'
     if %x{which ec2-describe-instances}.nil?
       puts "Unable to find ec2-describe-instances in path!"
       exit 2
@@ -53,19 +67,11 @@ class Ec2read
     gethash(%{ec2-describe-instances})
   end
 
-
-  def instance(instance_id,hash)
-
+  def to_hash
+    @ec2in
   end
 
-
-
-  def find(field,filter)
-
-
+  def find_by_attr(attr,value)
+    @ec2in.select {|e| pp e.class}
   end
-
-
-
-
 end
