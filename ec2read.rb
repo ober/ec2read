@@ -72,6 +72,8 @@ class Ec2read
   end
 
   def find_by_attr(attr,value)
-    @ec2in.select {|e| pp e.class}
+    @ec2in.select do |i,r|
+      r[attr.to_sym] == value
+    end
   end
 end
