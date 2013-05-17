@@ -16,6 +16,7 @@ class Ec2read
     :sgs,
     :size,
     :state,
+    :tags,
     :uuid_az,
     :xen
 ]
@@ -58,7 +59,23 @@ class Ec2read
         #when "RESERVATION"
         #   "reservation"3
       when "INSTANCE"
-        results[l[1]] = { :ami => l[2], :fqdn => l[3], :intern => l[4], :state => l[5], :size => l[9], :az => l[11], :aki => l[12], :ex_ip => l[16], :in_ip => l[17], :ebs => l[20], :paravirt => l[25], :xen => l[26], :uuid_az => l[27], :sgs => l[28], :default => l[29], :errata_f => l[30] }
+        results[l[1]] = {
+          :ami => l[2],
+          :fqdn => l[3],
+          :intern => l[4],
+          :state => l[5],
+          :size => l[9],
+          :az => l[11],
+          :aki => l[12],
+          :ex_ip => l[16],
+          :in_ip => l[17],
+          :ebs => l[20],
+          :paravirt => l[25],
+          :xen => l[26],
+          :uuid_az => l[27],
+          :sgs => l[28],
+          :default => l[29],
+          :errata_f => l[30] }
         results[:last_instance] = l[1] # Save for blockdevice.
       when "BLOCKDEVICE"
         results[:last_instance] = { :volid => l[2], :date => l[3] }
@@ -88,6 +105,12 @@ class Ec2read
 
   def to_hash
     @ec2in
+  end
+
+  def find_by_tag(tag,value)
+    @ec2in.select do |k,v|
+      v[:tags] && v[:tags][tag] && v[:tags][tag].strip == value
+    end
   end
 
   def find_by_attr(attr,value)
