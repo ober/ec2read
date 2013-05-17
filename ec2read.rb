@@ -2,24 +2,24 @@ class Ec2read
 
   require 'pp'
   $values = [  "Valid search attributes are:",
-    :aki,
-    :ami,
-    :az,
-    :default,
-    :ebs,
-    :errata_f,
-    :ex_ip,
-    :fqdn,
-    :in_ip,
-    :intern,
-    :paravirt,
-    :sgs,
-    :size,
-    :state,
-    :tags,
-    :uuid_az,
-    :xen
-]
+               :aki,
+               :ami,
+               :az,
+               :default,
+               :ebs,
+               :errata_f,
+               :ex_ip,
+               :fqdn,
+               :in_ip,
+               :intern,
+               :paravirt,
+               :sgs,
+               :size,
+               :state,
+               :tags,
+               :uuid_az,
+               :xen
+            ]
 
   $needed = [
              :AWS_ACCESS_KEY,
