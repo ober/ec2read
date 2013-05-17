@@ -1,6 +1,25 @@
 class Ec2read
 
   require 'pp'
+  $values = [  "Valid search attributes are:",
+    :aki,
+    :ami,
+    :az,
+    :default,
+    :ebs,
+    :errata_f,
+    :ex_ip,
+    :fqdn,
+    :in_ip,
+    :intern,
+    :paravirt,
+    :sgs,
+    :size,
+    :state,
+    :uuid_az,
+    :xen
+]
+
   $needed = [
              :AWS_ACCESS_KEY,
              :AWS_ACCESS_KEY,
@@ -72,6 +91,10 @@ class Ec2read
   end
 
   def find_by_attr(attr,value)
+    if attr.to_s.empty? or value.to_s.empty?
+      $values.each { |v| puts v }
+      exit
+    end
     @ec2in.select do |i,r|
       r[attr.to_sym] == value
     end
